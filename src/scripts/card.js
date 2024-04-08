@@ -1,10 +1,13 @@
 import "../pages/index.css";
-import { attachPopupToElement } from "./modal"; 
+import { attachPopupToElement } from "./modal.js"; 
+import { fillPopupImage } from '../index.js'
 
-// @todo: Темплейт карточки
-// @todo: DOM узлы
+// Темплейт карточки
+const cardTemplateContent = document.querySelector("#card-template").content;
+// DOM узлы
 const places = document.querySelector(".places");
 const placesList = places.querySelector(".places__list");
+const popupCard = document.querySelector(".popup_type_image");
 
 //функция удаления карточки
 const deleteCard = (cardElement, event) => {
@@ -19,26 +22,20 @@ const fillCard = (cardElement, name, link) => {
   cardElement.querySelector(".card__title").textContent = name;
 }
 
-//функция заполнения попапа_карточки
-const fillPopupImage = (popup, name, link) => {
-  popup.querySelector(".popup__image").src = link;
-  popup.querySelector(".popup__caption").textContent = name;
-}
-
 //функция лайка карточки
 export const likeCard = (cardElement, event) => {
   event.stopPropagation(); 
   const likeButton = cardElement.querySelector('.card__like-button');
   if (likeButton.classList.contains('card__like-button_is-active')){
     likeButton.classList.remove('card__like-button_is-active');
-  } else likeButton.classList.add('card__like-button_is-active');
+  } else {
+    likeButton.classList.add('card__like-button_is-active');
+  }
 }
 
 // @todo: Функция создания карточки
 function createCard(name, link, likeCard, attachPopupToElement) {
-  const cardTemplate = document.querySelector("#card-template").content;
-  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
-  const popup = document.querySelector(".popup_type_image");
+  const cardElement = cardTemplateContent.querySelector(".card").cloneNode(true);
 
   //заполнение карточки
   fillCard(cardElement, name, link);
@@ -50,10 +47,10 @@ function createCard(name, link, likeCard, attachPopupToElement) {
   cardElement.querySelector(".card__like-button").addEventListener("click", (event) => likeCard(cardElement, event));
 
   //добавление листнера открытия попапа
-  attachPopupToElement(cardElement, popup);
+  attachPopupToElement(cardElement, popupCard);
 
   //добавление листнера заполнения попапа_карточки
-  cardElement.addEventListener("click", () => fillPopupImage(popup, name, link))
+  cardElement.addEventListener("click", () => fillPopupImage(name, link))
 
   return cardElement;
 }
