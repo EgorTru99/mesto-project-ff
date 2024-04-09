@@ -1,6 +1,6 @@
 import { initialCards } from "./scripts/cards.js";
 import { createCard, placesList, likeCard } from "./scripts/card.js";
-import { attachPopupToElement, closeModal } from "./scripts/modal.js";
+import { openModal, closeModal } from "./scripts/modal.js";
 import "./scripts/modal.js";
 
 // УЗЛЫ
@@ -21,37 +21,31 @@ const popupTypeEditForm = popupTypeEdit.querySelector(".popup__form");
 const popupTypeEditTitle = popupTypeEditForm.querySelector(".popup__input_type_name");
 const popupTypeEditDescription = popupTypeEditForm.querySelector(".popup__input_type_description");
 // Попап изображения карточки
-const popupCard = document.querySelector(".popup_type_image");
-const popupImage = popupCard.querySelector(".popup__image");
-const popupCaption = popupCard.querySelector(".popup__caption");
-// Карточки
-const cards = document.querySelectorAll('.card');
+const popupTypeImage = document.querySelector(".popup_type_image");
+const popupImagePicture = popupTypeImage.querySelector(".popup__image");
+const popupImageCaption = popupTypeImage.querySelector(".popup__caption");
 
-// добавление открытия попапов на кнопки
-attachPopupToElement(addButton, popupTypeNewCard);
-attachPopupToElement(editButton, popupTypeEdit);
+// добавление модуля попапов на кнопки
+openModal(addButton, popupTypeNewCard);
+openModal(editButton, popupTypeEdit);
 
 // очистка формы добавления новой карточки
 addButton.addEventListener("click", () => resetForm(popupTypeNewCardForm));
 
-// за формы добавления новой карточки
+// заполнение формы добавления новой карточки
 editButton.addEventListener("click", fillUserEditForm);
 
 // добавление на формы возможности САБМИТ
 popupTypeNewCardForm.addEventListener("submit", handleAddNewCardFormSubmit);
 popupTypeEditForm.addEventListener("submit", handleEditFormSubmit);
 
-// Вывести карточки на страницу
-initialCards.forEach(function (initialCards) {
-  placesList.append(createCard(initialCards.name, initialCards.link, likeCard, attachPopupToElement));
+// Вывести массив карточек на страницу
+initialCards.forEach(function (initialCard) {
+  const cardFromMass = createCard(initialCard.name, initialCard.link, likeCard, openModal);
+  placesList.append(cardFromMass);
+  openModal(cardFromMass.querySelector('.card__image'), popupTypeImage);
+  cardFromMass.querySelector('.card__image').addEventListener('click', () => fillPopupImage(initialCard.name, initialCard.link))
 });
-
-// функция заполнения попапа_карточки
-export function fillPopupImage(name, link) {
-  popupImage.src = link;
-  popupImage.alt = name;
-  popupCaption.textContent = name;
-}
 
 // очистка формы попапа
 function resetForm(form) {
@@ -61,7 +55,10 @@ function resetForm(form) {
 // Добавление новой карточки через попап
 function handleAddNewCardFormSubmit(event) {
   event.preventDefault();
-  placesList.prepend(createCard(popupTypeNewCardInputName.value, popupTypeNewCardInputURL.value, likeCard, attachPopupToElement));
+  const cardFromAddButton = createCard(popupTypeNewCardInputName.value, popupTypeNewCardInputURL.value, likeCard, openModal);
+  placesList.prepend(cardFromAddButton);
+  openModal(cardFromAddButton.querySelector('.card__image'), popupTypeImage);
+  cardFromAddButton.querySelector('.card__image').addEventListener('click', () => fillPopupImage(popupTypeNewCardInputName.value, popupTypeNewCardInputURL.value))
   closeModal();
 }
 
@@ -73,8 +70,15 @@ function handleEditFormSubmit(event) {
   closeModal();
 }
 
+// Заполнить value в форме edit попапа текущими именем и описанием профиля
 function fillUserEditForm() {
-  // Заполнить value в форме edit попапа текущими именем и описанием профиля
   popupTypeEditTitle.value = profileTitle.textContent;
   popupTypeEditDescription.value = profileDescription.textContent;
+}
+
+// функция заполнения попапа_карточки
+function fillPopupImage(name, link) {
+  popupImagePicture.src = link;
+  popupImagePicture.alt = name;
+  popupImageCaption.textContent = name;
 }

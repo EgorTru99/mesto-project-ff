@@ -1,13 +1,10 @@
 import "../pages/index.css";
-import { attachPopupToElement } from "./modal.js"; 
-import { fillPopupImage } from '../index.js'
 
 // Темплейт карточки
 const cardTemplateContent = document.querySelector("#card-template").content;
 // DOM узлы
 const places = document.querySelector(".places");
 const placesList = places.querySelector(".places__list");
-const popupCard = document.querySelector(".popup_type_image");
 
 //функция удаления карточки
 const deleteCard = (cardElement, event) => {
@@ -34,7 +31,7 @@ export const likeCard = (cardElement, event) => {
 }
 
 // @todo: Функция создания карточки
-function createCard(name, link, likeCard, attachPopupToElement) {
+function createCard(name, link, likeCard, openModal) {
   const cardElement = cardTemplateContent.querySelector(".card").cloneNode(true);
 
   //заполнение карточки
@@ -45,12 +42,6 @@ function createCard(name, link, likeCard, attachPopupToElement) {
 
   //добавление листнера лайка
   cardElement.querySelector(".card__like-button").addEventListener("click", (event) => likeCard(cardElement, event));
-
-  //добавление листнера открытия попапа
-  attachPopupToElement(cardElement, popupCard);
-
-  //добавление листнера заполнения попапа_карточки
-  cardElement.addEventListener("click", () => fillPopupImage(name, link))
 
   return cardElement;
 }
