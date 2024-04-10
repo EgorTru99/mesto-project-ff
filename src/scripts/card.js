@@ -22,16 +22,16 @@ const fillCard = (cardElement, name, link) => {
 //функция лайка карточки
 export const likeCard = (cardElement, event) => {
   event.stopPropagation(); 
-  const likeButton = cardElement.querySelector('.card__like-button');
-  if (likeButton.classList.contains('card__like-button_is-active')){
-    likeButton.classList.remove('card__like-button_is-active');
+  const likeButton = cardElement.querySelector(".card__like-button");
+  if (likeButton.classList.contains("card__like-button_is-active")){
+    likeButton.classList.remove("card__like-button_is-active");
   } else {
-    likeButton.classList.add('card__like-button_is-active');
+    likeButton.classList.add("card__like-button_is-active");
   }
 }
 
 // @todo: Функция создания карточки
-function createCard(name, link, likeCard, openModal) {
+function createCard(name, link, likeCard, openModal, onImageClick) {
   const cardElement = cardTemplateContent.querySelector(".card").cloneNode(true);
 
   //заполнение карточки
@@ -42,6 +42,9 @@ function createCard(name, link, likeCard, openModal) {
 
   //добавление листнера лайка
   cardElement.querySelector(".card__like-button").addEventListener("click", (event) => likeCard(cardElement, event));
+  
+  //Добавление обработчика клика на картинку
+  cardElement.querySelector(".card__image").addEventListener("click", () => onImageClick(name, link));
 
   return cardElement;
 }

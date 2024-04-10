@@ -8,7 +8,8 @@ export function closeModal() {
 
 // Убрать слушатели закрытия попапа
 function removePopupCloseListners(popup) {
-  popup.removeEventListener('click', closePopupByOverlayClick);
+  const popupCloseButton =  popup.querySelector(".popup__content").querySelector(".popup__close");
+  popupCloseButton.removeEventListener('click', closePopupByCloseButton);
   document.removeEventListener('keydown', closePopupByEscKeydown);
   popup.removeEventListener('click', closePopupByOverlayClick);
 }
@@ -43,13 +44,8 @@ function addPopupCloseListeners(popup) {
 };
 
 //Добывление возможности открытия попопа при клике на элемент
-export function openModal(element, popup) {
+export function openModal(popup) {
   popup.classList.add("popup_is-animated");
-  element.addEventListener("click", () => openPopup(popup));
-};
-
-// Открытие попапа
-function openPopup(popup){
   popup.classList.add("popup_is-opened");
   addPopupCloseListeners(popup);
 }

@@ -25,26 +25,28 @@ const popupTypeImage = document.querySelector(".popup_type_image");
 const popupImagePicture = popupTypeImage.querySelector(".popup__image");
 const popupImageCaption = popupTypeImage.querySelector(".popup__caption");
 
-// добавление модуля попапов на кнопки
-openModal(addButton, popupTypeNewCard);
-openModal(editButton, popupTypeEdit);
+// добавление попапа на кнопку "редактировать"
+editButton.addEventListener("click", () => {
+  // заполнение формы редактирования текущей информацией пользователя
+ fillUserEditForm();
+ openModal(popupTypeEdit);
+});
 
-// очистка формы добавления новой карточки
-addButton.addEventListener("click", () => resetForm(popupTypeNewCardForm));
+// добавление попапа на кнопку "добавить карточку"
+addButton.addEventListener("click", () => {
+  openModal(popupTypeNewCard);
+  // очистка формы добавления новой карточки 
+  resetForm(popupTypeNewCardForm);
+});
 
-// заполнение формы добавления новой карточки
-editButton.addEventListener("click", fillUserEditForm);
-
-// добавление на формы возможности САБМИТ
+// добавление на формы функции САБМИТ
 popupTypeNewCardForm.addEventListener("submit", handleAddNewCardFormSubmit);
 popupTypeEditForm.addEventListener("submit", handleEditFormSubmit);
 
 // Вывести массив карточек на страницу
 initialCards.forEach(function (initialCard) {
-  const cardFromMass = createCard(initialCard.name, initialCard.link, likeCard, openModal);
+  const cardFromMass = createCard(initialCard.name, initialCard.link, likeCard, openModal, onImageClick);
   placesList.append(cardFromMass);
-  openModal(cardFromMass.querySelector('.card__image'), popupTypeImage);
-  cardFromMass.querySelector('.card__image').addEventListener('click', () => fillPopupImage(initialCard.name, initialCard.link))
 });
 
 // очистка формы попапа
@@ -55,10 +57,8 @@ function resetForm(form) {
 // Добавление новой карточки через попап
 function handleAddNewCardFormSubmit(event) {
   event.preventDefault();
-  const cardFromAddButton = createCard(popupTypeNewCardInputName.value, popupTypeNewCardInputURL.value, likeCard, openModal);
+  const cardFromAddButton = createCard(popupTypeNewCardInputName.value, popupTypeNewCardInputURL.value, likeCard, openModal, onImageClick);
   placesList.prepend(cardFromAddButton);
-  openModal(cardFromAddButton.querySelector('.card__image'), popupTypeImage);
-  cardFromAddButton.querySelector('.card__image').addEventListener('click', () => fillPopupImage(popupTypeNewCardInputName.value, popupTypeNewCardInputURL.value))
   closeModal();
 }
 
@@ -81,4 +81,10 @@ function fillPopupImage(name, link) {
   popupImagePicture.src = link;
   popupImagePicture.alt = name;
   popupImageCaption.textContent = name;
+}
+
+// Метод открывания попапа карточки  
+function onImageClick(name, link) {
+  openModal(popupTypeImage);
+  fillPopupImage(name, link);
 }
