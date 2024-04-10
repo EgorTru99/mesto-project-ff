@@ -43,7 +43,7 @@ function addPopupCloseListeners(popup) {
   popup.addEventListener("click", closePopupByOverlayClick);
 };
 
-//Добывление возможности открытия попопа при клике на элемент
+//Открытие Попапа
 export function openModal(popup) {
   popup.classList.add("popup_is-animated");
   popup.classList.add("popup_is-opened");
