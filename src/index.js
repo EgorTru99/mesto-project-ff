@@ -47,7 +47,6 @@ editButton.addEventListener("click", () => {
   // заполнение формы редактирования текущей информацией пользователя
  fillUserEditForm();
  clearValidation(popupTypeEditForm, configValidation);
- popupTypeEditForm.querySelector('.button').classList.remove('button_inactive');
  openModal(popupTypeEdit);
 });
 
@@ -57,7 +56,6 @@ addButton.addEventListener("click", () => {
   clearValidation(popupTypeNewCardForm, configValidation);
   // очистка формы
   resetForm(popupTypeNewCardForm);
-  popupTypeNewCardForm.querySelector('.button').classList.add('button_inactive');
 });
 
 // добавление попапа на кнопку "редактировать аватар"
@@ -66,7 +64,6 @@ editAvatarButton.addEventListener("click", () => {
   clearValidation(popupTypeEditAvatarForm, configValidation);
   // очистка формы 
   resetForm(popupTypeEditAvatarForm);
-  popupTypeEditAvatarForm.querySelector('.button').classList.add('button_inactive');
 });
 
 // добавление на формы функции САБМИТ

@@ -15,23 +15,23 @@ export const enableValidation = (configValidation) => {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
     });
-    setEventListeners(form);
+    setEventListeners(form, configValidation);
   })
 }
 
 // функция включения проверки валидации инпутов в форме
-const setEventListeners = (form) => {
+const setEventListeners = (form, configValidation) => {
   const inputList = Array.from(form.querySelectorAll(configValidation.inputSelector));
   inputList.forEach((input) => {
     input.addEventListener('input', function () {
-      checkInputValidity(form, input);
-      toggleButtonState(inputList, form.querySelector(configValidation.submitButtonSelector));
+      checkInputValidity(form, input, configValidation);
+      toggleButtonState(inputList, form.querySelector(configValidation.submitButtonSelector), configValidation);
     });
   });
 };
 
 // проверка валидации инпута
-const checkInputValidity = (form, input) => {
+const checkInputValidity = (form, input, configValidation) => {
   // проверка кастомных ошибок (если не соответсвует регулярке)
   if (input.validity.patternMismatch) {
     input.setCustomValidity(input.dataset.errorMessage);
@@ -40,21 +40,21 @@ const checkInputValidity = (form, input) => {
   }
   // toggle информирования об ошибке
   if (!input.validity.valid) {
-    showInputError(form, input, input.validationMessage);
+    showInputError(form, input, input.validationMessage, configValidation);
   } else {
-    hideInputError(form, input);
+    hideInputError(form, input, configValidation);
   }  
 };
 
 // показать информацию об ошибке при вводе данных
-const showInputError = (form, input, errorMessage) => {
+const showInputError = (form, input, errorMessage, configValidation) => {
   const errorElement = form.querySelector(`.${input.id}-error`);
   input.classList.add(configValidation.inputErrorClass);
   errorElement.textContent = errorMessage;
 }
 
 // убрать информацию об ошибке при вводе данных
-const hideInputError = (form, input) => {
+const hideInputError = (form, input, configValidation) => {
   const errorElement = form.querySelector(`.${input.id}-error`);
   input.classList.remove(configValidation.inputErrorClass);
   errorElement.textContent = '';
@@ -68,18 +68,23 @@ const hasInvalidInput = (inputList) => {
 }
 
 // переключатель состояния кнопки при валидных/инвалидных данных
-const toggleButtonState = (inputList, buttonElement) => {
+const toggleButtonState = (inputList, buttonElement, configValidation) => {
   if(hasInvalidInput(inputList)){
     buttonElement.classList.add(configValidation.inactiveButtonClass);
+    buttonElement.disabled = true;
   } else {
     buttonElement.classList.remove(configValidation.inactiveButtonClass);
+    buttonElement.disabled = false;
   }
 }
 
 // очистка информации о валидации
 export const clearValidation = (form, configValidation) => {
   const inputList = Array.from(form.querySelectorAll(configValidation.inputSelector));
+  const formButton = form.querySelector('.button');
   inputList.forEach((input) => {
-    hideInputError(form, input);
+    hideInputError(form, input, configValidation);
   });
+  formButton.classList.add(configValidation.inactiveButtonClass);
+  formButton.disabled = true;
 }
